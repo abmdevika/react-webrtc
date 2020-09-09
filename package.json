@@ -20,6 +20,7 @@
     "socket.io-client": "^2.3.0"
   },
   "scripts": {
+    "local": "react-scripts start",
     "start": "node server/index.js",
     "build": "react-scripts build",
     "watch:server": "nodemon server/index.js",
@@ -29,6 +30,7 @@
   "eslintConfig": {
     "extends": "react-app"
   },
+  "proxy": "http://localhost:5000/bridge/",
   "browserslist": {
     "production": [
       ">0.2%",
