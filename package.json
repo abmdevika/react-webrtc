@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^7.2.1",
     "bootstrap-sass": "^3.4.1",
     "classnames": "^2.2.6",
+    "express": "^4.17.1",
     "file-loader": "^6.1.0",
     "font-awesome": "^4.7.0",
     "lodash": "^4.17.20",
@@ -19,7 +20,7 @@
     "socket.io-client": "^2.3.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node server/index.js",
     "build": "react-scripts build",
     "watch:server": "nodemon server/index.js",
     "test": "react-scripts test",
