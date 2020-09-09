@@ -10,10 +10,13 @@ class MediaDevice extends Emitter {
    */
   start() {
     const constraints = {
-      video: false,
+      video: {
+        facingMode: 'user',
+        height: { min: 360, ideal: 720, max: 1080 },
+      },
       audio: true,
     };
-    alert(navigator.getUserMedia);
+
     navigator.mediaDevices
       .getUserMedia(constraints)
       .then((stream) => {
