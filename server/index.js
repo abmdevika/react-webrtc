@@ -6,7 +6,7 @@ const socket = require('./lib/socket');
 
 const app = express();
 const server = http.createServer(app);
-const publicPath = path.join(__dirname, '../..', 'build');
+const publicPath = path.join(__dirname, '../', 'build');
 
 app.use(express.static(publicPath));
 
