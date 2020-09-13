@@ -3,26 +3,32 @@
   display: flex;
   justify-content: flex-end;
   flex-direction: column;
-  height: 100%;
+  height: 96%;
   overflow: hidden;
-  position: relative;
-  background-color: white;
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: $main-color;
   width: 300px;
-  color: black;
-  //   :first-child {
-  //     height: 100%;
-  //     div {
-  //       height: 100%;
-  //       overflow: auto;
-  //     }
-  //   }
-  //   :last-child {
-  //     flex: 1;
-  //     flex-shrink: 0;
-  //     height: 40px;
-  //     display: flex;
-  //   }
-  input {
-    color: black;
+  color: $black;
+  padding: 10px;
+  .messageList {
+    height: 100%;
+    overflow: hidden;
+    div {
+      height: 100%;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+  }
+
+  .send-button {
+    display: flex;
+    input {
+      color: $black;
+      width: 100%;
+    }
   }
 }

@@ -18,10 +18,11 @@ function ChatWindow({ clientId }) {
   const handleSendMessage = () => {
     setMessageList([...messageList, `${clientId}:- ${message}`]);
     socket.emit('sendchat', { clientId, message });
+    setMessage('');
   };
   return (
     <div className='message-container '>
-      <div>
+      <div class='messageList'>
         <div>
           {messageList.map((msg) => (
             <p>{msg}</p>
@@ -32,18 +33,27 @@ function ChatWindow({ clientId }) {
           {` ${clientId}`}
         </h3>
       </div>
-      <div>
+
+      <div className='input-group mb-3 send-button'>
         <input
           type='text'
-          className='txt-clientId'
-          placeholder='Type your Message'
+          value={message}
+          className='form-control'
+          aria-label="Recipient's username"
+          aria-describedby='button-addon2'
+          placeholder='Type your Message...'
           onChange={(event) => setMessage(event.target.value)}
         />
-        <button
-          type='button'
-          className='btn-action fa fa-paper-plane'
-          onClick={handleSendMessage}
-        />
+        <div className='input-group-append'>
+          <button
+            className='btn btn-outline-secondary'
+            type='button'
+            id='button-addon2'
+            onClick={handleSendMessage}
+          >
+            Send
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -113,7 +113,9 @@ class ApplicationWrapper extends Component {
     } = this.state;
     return (
       <div>
-        <MainWindow clientId={clientId} startCall={this.startCallHandler} />
+        {!peerSrc && (
+          <MainWindow clientId={clientId} startCall={this.startCallHandler} />
+        )}
         {!_.isEmpty(this.config) && (
           <CallWindow
             status={callWindow}
