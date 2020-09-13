@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-
+import ChatWindow from '../ChatWindow';
+import './CallWindow.scss';
 const getButtonClass = (icon, enabled) =>
   classnames(`btn-action fa ${icon}`, { disable: !enabled });
 
@@ -11,6 +12,7 @@ function CallWindow({
   config,
   mediaDevice,
   status,
+  clientId,
   endCall,
 }) {
   const peerVideo = useRef(null);
@@ -69,6 +71,7 @@ function CallWindow({
           onClick={() => endCall(true)}
         />
       </div>
+      <ChatWindow clientId={clientId} />
     </div>
   );
 }

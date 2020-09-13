@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Video from './js/App';
-import './css/app.scss';
+import Video from './ApplicationWrapper';
+import './scss/app.scss';
 
 function App() {
   return <Video />;

@@ -1,0 +1,28 @@
+@import '../../scss/app.scss';
+.message-container {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  background-color: white;
+  width: 300px;
+  color: black;
+  //   :first-child {
+  //     height: 100%;
+  //     div {
+  //       height: 100%;
+  //       overflow: auto;
+  //     }
+  //   }
+  //   :last-child {
+  //     flex: 1;
+  //     flex-shrink: 0;
+  //     height: 40px;
+  //     display: flex;
+  //   }
+  input {
+    color: black;
+  }
+}

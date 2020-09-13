@@ -6,17 +6,37 @@ const PC_CONFIG = { iceServers: [{ urls: ['stun:stun.l.google.com:19302'] }] };
 
 class PeerConnection extends Emitter {
   /**
-     * Create a PeerConnection.
-     * @param {String} friendID - ID of the friend you want to call.
-     */
+   * Create a PeerConnection.
+   * @param {String} friendID - ID of the friend you want to call.
+   */
   constructor(friendID) {
     super();
     this.pc = new RTCPeerConnection(PC_CONFIG);
-    this.pc.onicecandidate = (event) => socket.emit('call', {
-      to: this.friendID,
-      candidate: event.candidate
-    });
-    this.pc.ontrack = (event) => this.emit('peerStream', event.streams[0]);
+
+    this.to = friendID;
+    console.log(this.friendID);
+
+    this.pc.onicecandidate = (event) => {
+      socket.emit('addUser', {
+        to: friendID,
+        candidate: event.candidate,
+      });
+    };
+    //new
+    this.pc.onnegotiationneeded = function () {
+      console.log('on negotiation called');
+      this.createOffer();
+    };
+
+    //ens
+    this.pc.ontrack = (event) => {
+      this.emit('peerStream', event.streams[0]);
+      // alert(event.stream);
+
+      // document.getElementById('peerVideo').srcObject = new MediaStream([
+      //   event.track,
+      // ]);
+    };
 
     this.mediaDevice = new MediaDevice();
     this.friendID = friendID;
@@ -27,17 +47,22 @@ class PeerConnection extends Emitter {
    * @param {Boolean} isCaller
    * @param {Object} config - configuration for the call {audio: boolean, video: boolean}
    */
-  start(isCaller, config) {
+  start(data) {
     this.mediaDevice
       .on('stream', (stream) => {
         stream.getTracks().forEach((track) => {
           this.pc.addTrack(track, stream);
         });
         this.emit('localStream', stream);
-        if (isCaller) socket.emit('request', { to: this.friendID });
-        else this.createOffer();
+
+        this.to = data.roomId;
+        this.from = data.usrName;
+        if (data.usrName) {
+          this.call();
+          // socket.emit('adduser', { to: this.to, from: this.from });
+        } else this.createOffer(data.roomId);
       })
-      .start(config);
+      .start(data.config);
 
     return this;
   }
@@ -58,14 +83,26 @@ class PeerConnection extends Emitter {
   }
 
   createOffer() {
-    this.pc.createOffer()
+    this.pc
+      .createOffer()
       .then(this.getDescription.bind(this))
       .catch((err) => console.log(err));
     return this;
   }
 
-  createAnswer() {
-    this.pc.createAnswer()
+  call() {
+    this.pc
+      .createOffer()
+      .then(this.getVideo.bind(this))
+      .catch((err) => console.log(err));
+    return this;
+  }
+
+  createAnswer({ from, to }) {
+    this.from = from;
+    this.to = to;
+    this.pc
+      .createAnswer()
       .then(this.getDescription.bind(this))
       .catch((err) => console.log(err));
     return this;
@@ -73,7 +110,13 @@ class PeerConnection extends Emitter {
 
   getDescription(desc) {
     this.pc.setLocalDescription(desc);
-    socket.emit('call', { to: this.friendID, sdp: desc });
+    socket.emit('adduser', { to: this.friendID, from: this.from, sdp: desc });
+    return this;
+  }
+
+  getVideo(desc) {
+    this.pc.setLocalDescription(desc);
+    socket.emit('adduser', { to: this.to, from: this.from, sdp: desc });
     return this;
   }
 
@@ -90,6 +133,7 @@ class PeerConnection extends Emitter {
    * @param {Object} candidate - ICE Candidate
    */
   addIceCandidate(candidate) {
+    console.log(candidate);
     if (candidate) {
       const iceCandidate = new RTCIceCandidate(candidate);
       this.pc.addIceCandidate(iceCandidate);

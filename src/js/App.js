@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import socket from './socket';
-import PeerConnection from './PeerConnection';
+import socket from '../connectionHandler/socket';
+import PeerConnection from '../connectionHandler/PeerConnection';
 import MainWindow from './MainWindow';
 import CallWindow from './CallWindow';
 import CallModal from './CallModal';
@@ -25,10 +25,8 @@ class App extends Component {
   }
 
   componentDidMount() {
-    console.log('hee');
     socket
       .on('init', ({ id: clientId }) => {
-        console.log('hee');
         document.title = `${clientId} - VideoCall`;
         this.setState({ clientId });
       })
