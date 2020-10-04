@@ -16,13 +16,13 @@ function ChatWindow({ clientId }) {
   });
 
   const handleSendMessage = () => {
-    setMessageList([...messageList, `${clientId}:- ${message}`]);
+    setMessageList([...messageList, `me:- ${message}`]);
     socket.emit('sendchat', { clientId, message });
     setMessage('');
   };
   return (
     <div className='message-container '>
-      <div class='messageList'>
+      <div className='messageList'>
         <div>
           {messageList.map((msg) => (
             <p>{msg}</p>

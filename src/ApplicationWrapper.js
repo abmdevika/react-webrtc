@@ -26,37 +26,12 @@ class ApplicationWrapper extends Component {
 
   componentDidMount() {
     socket
-      //   // .on('init', ({ id: clientId }) => {
-      //   //   document.title = `${clientId} - VideoCall`;
-      //   //   this.setState({ clientId });
-      //   // })
-      //   .on('request', ({ from: callFrom }) => {
-      //     this.setState({ callModal: 'active', callFrom });
-      //   })
-
-      .on('call', (data) => {
-        // if (data.sdp) {
-        //   this.pc.setRemoteDescription(data.sdp);
-
-        //   if (data.sdp.type === 'offer') {
-        //     this.pc.createAnswer({ from: data?.from, to: data.to });
-        //   }
-        // } else this.pc.addIceCandidate(data.candidate);
-
-        if (data.sdp) {
-          this.pc.setRemoteDescription(data.sdp);
-          if (data.sdp.type === 'offer')
-            this.pc.createAnswer({ from: data?.from, to: data.to });
-          else this.pc.addIceCandidate(data.candidate);
-        } else this.pc.addIceCandidate(data.candidate);
-      })
       .on('signal', (data) => {
         if (data.sdp) {
           this.pc.setRemoteDescription(data.sdp);
           if (data.sdp.type === 'offer')
-            this.pc.createAnswer({ from: data?.from, to: data.to });
-          else this.pc.addIceCandidate(data.candidate);
-        } else this.pc.addIceCandidate(data.candidate);
+            this.pc.createAnswer({ from: data?.from, to: data?.to });
+        } else this.pc.addIceCandidate(data?.candidate);
       })
       .on('end', this.endCall.bind(this, false));
   }
@@ -76,7 +51,9 @@ class ApplicationWrapper extends Component {
         this.setState(newState);
       })
       .on('peerStream', (src) => {
-        this.setState({ peerSrc: src });
+        setTimeout(() => {
+          this.setState({ peerSrc: src });
+        }, 1000);
       })
 
       .start({ usrName, roomId, config });

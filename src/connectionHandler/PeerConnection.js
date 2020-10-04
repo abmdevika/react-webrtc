@@ -14,10 +14,11 @@ class PeerConnection extends Emitter {
     this.pc = new RTCPeerConnection(PC_CONFIG);
 
     this.to = friendID;
-    console.log(this.friendID);
+
+    // once remote stream arrives, show it in the remote video element
 
     this.pc.onicecandidate = (event) => {
-      socket.emit('addUser', {
+      socket.emit('signal', {
         to: friendID,
         candidate: event.candidate,
       });
@@ -31,11 +32,6 @@ class PeerConnection extends Emitter {
     //ens
     this.pc.ontrack = (event) => {
       this.emit('peerStream', event.streams[0]);
-      // alert(event.stream);
-
-      // document.getElementById('peerVideo').srcObject = new MediaStream([
-      //   event.track,
-      // ]);
     };
 
     this.mediaDevice = new MediaDevice();
@@ -59,7 +55,6 @@ class PeerConnection extends Emitter {
         this.from = data.usrName;
         if (data.usrName) {
           this.call();
-          // socket.emit('adduser', { to: this.to, from: this.from });
         } else this.createOffer(data.roomId);
       })
       .start(data.config);

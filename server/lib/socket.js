@@ -12,7 +12,7 @@ function initSocket(socket) {
 
     // when the client emits 'adduser', this listens and executes
     .on('adduser', function (data) {
-      console.log('user add', data.from, data.to, data);
+      console.log('user add', data.from, data.to);
       const { from, to } = data;
       // store the username in the socket session for this client
       socket.username = from;
@@ -22,10 +22,8 @@ function initSocket(socket) {
       userNames[from] = from;
       // send client to room 1
       socket.join(to);
-      socket.broadcast.to(to).emit('call', { ...data });
-      socket.broadcast.to(to).emit('signal', {
-        from: from,
-        to: to,
+
+      socket.to(to).broadcast.emit('signal', {
         ...data,
       });
       // socket.emit('video', { ...data, from });
@@ -42,17 +40,7 @@ function initSocket(socket) {
       // we tell the client to execute 'updatechat' with 2 parameters
       socket.broadcast
         .to(socket.room)
-        .emit('updatechat', socket.username, data.message);
-    })
-
-    .on('request', (data) => {
-      console.log('request', data);
-      socket.join(data);
-
-      const receiver = data.to;
-      if (receiver) {
-        socket.to(receiver).emit('request', { from: data.to });
-      }
+        .emit('updatechat', data.clientId, data.message);
     })
 
     .on('end', (data) => {
@@ -62,17 +50,13 @@ function initSocket(socket) {
       }
     })
 
-    .on('send', (data) => {
-      console.log('sent data', data);
-      const receiver = data.to;
-      if (receiver) {
-        socket.to(receiver).emit('newMessage', { ...data, from: data.author });
-      }
-    })
     .on('signal', (data) => {
-      console.log('sending signal from ' + socket.id + ' to ', data);
+      console.log(
+        'sending signal from ' + socket.username + ' to ',
+        socket.room
+      );
 
-      socket.to(socket.room).emit('signal', {
+      socket.to(socket.room).broadcast.emit('signal', {
         from: socket.username,
         to: socket.room,
         ...data,
