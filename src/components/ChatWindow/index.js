@@ -1,37 +1,58 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import socket from '../../connectionHandler/socket';
 
 import PropTypes from 'prop-types';
+
 import './ChatWindow.scss';
 
-function ChatWindow({ clientId }) {
+function ChatWindow({ clientId, messageList, setMessageList }) {
   const [message, setMessage] = useState('');
-  const [messageList, setMessageList] = useState([]);
+
+  const msgRef = useRef();
 
   useEffect(() => {
     socket.on('updatechat', function (username, data) {
-      console.log('connected', username, data);
-      setMessageList([...messageList, `${username}:- ${data}`]);
+      new Audio('../hollow-582.mp3').play();
+      setMessageList([
+        ...messageList,
+        { name: username, message: `${username}:- ${data}` },
+      ]);
     });
+    scrollToBottom();
   });
 
   const handleSendMessage = () => {
-    setMessageList([...messageList, `me:- ${message}`]);
+    setMessageList([
+      ...messageList,
+      { name: 'me', message: `me:- ${message}` },
+    ]);
     socket.emit('sendchat', { clientId, message });
     setMessage('');
   };
+
+  const scrollToBottom = () => {
+    msgRef.current.scrollIntoView({ behavior: 'smooth' });
+  };
+  const handleKeyPress = (e) => {
+    const x = e || window.event;
+    const key = x.keyCode || x.which;
+    if (key === 13 || key === 3) {
+      //runs this function when enter is pressed
+      message && handleSendMessage();
+    }
+  };
+
   return (
     <div className='message-container '>
       <div className='messageList'>
         <div>
-          {messageList.map((msg) => (
-            <p>{msg}</p>
+          {messageList.map((msg, index) => (
+            <p className={msg.name} key={index}>
+              {msg.message}
+            </p>
           ))}
+          <span ref={msgRef} />
         </div>
-        <h3>
-          User Name
-          {` ${clientId}`}
-        </h3>
       </div>
 
       <div className='input-group mb-3 send-button'>
@@ -42,13 +63,15 @@ function ChatWindow({ clientId }) {
           aria-label="Recipient's username"
           aria-describedby='button-addon2'
           placeholder='Type your Message...'
+          onKeyPress={handleKeyPress}
           onChange={(event) => setMessage(event.target.value)}
         />
         <div className='input-group-append'>
           <button
-            className='btn btn-outline-secondary'
+            className='btn btn-primary'
             type='button'
             id='button-addon2'
+            disabled={!message}
             onClick={handleSendMessage}
           >
             Send

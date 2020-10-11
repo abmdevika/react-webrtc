@@ -4,34 +4,48 @@ $fa-font-path: '~font-awesome/fonts';
 $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 @import '~bootstrap-sass/assets/stylesheets/bootstrap';
 
-@import 'variables';
-@import 'shared/base';
+@import './variables.scss';
+@import './shared/base.scss';
 
 html {
-  background: black;
+  background: #f7f7f7;
+  display: flex;
+  height: 100%;
+  width: 100%;
 }
 
 body {
-  background: rgba(#000000, 0.6);
-  padding: 0px 20px 20px 20px;
-  min-height: 100vh;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  @media only screen and (max-width: 600px) {
+    padding: 0;
+  }
 }
 
 .navbar-brand {
   font-size: 1.5em;
   img {
     display: inline-block;
-    width: 50px;
+    width: 3.125rem;
   }
 }
 
 #root {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  .rtcContainer {
+    display: flex;
+    height: 100%;
+    width: 100%;
+  }
   h2 {
-    margin-top: 0px;
+    margin-top: 0rem;
   }
 
   h4 {
-    margin-top: 20px;
+    margin-top: 1.25rem;
   }
 }
 

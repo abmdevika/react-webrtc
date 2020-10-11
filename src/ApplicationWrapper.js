@@ -4,7 +4,8 @@ import socket from './connectionHandler/socket';
 import PeerConnection from './connectionHandler/PeerConnection';
 import MainWindow from './components/CallingWindow';
 import CallWindow from './components/CallWindow';
-import CallModal from './components/CallModal';
+import SnackBar from './components/SnackBar/index.tsx';
+
 import './scss/app.scss';
 class ApplicationWrapper extends Component {
   constructor() {
@@ -14,6 +15,7 @@ class ApplicationWrapper extends Component {
       callWindow: '',
       callModal: '',
       callFrom: '',
+      snackMessage: '',
       localSrc: null,
       peerSrc: null,
     };
@@ -33,6 +35,15 @@ class ApplicationWrapper extends Component {
             this.pc.createAnswer({ from: data?.from, to: data?.to });
         } else this.pc.addIceCandidate(data?.candidate);
       })
+
+      .on('room', () => {
+        this.config = null;
+        this.setState({ peerSrc: null });
+        this.handleSnackMessage(
+          'Sorry! this room is busy! Please check some other room'
+        );
+      })
+
       .on('end', this.endCall.bind(this, false));
   }
 
@@ -60,8 +71,8 @@ class ApplicationWrapper extends Component {
   }
 
   rejectCall() {
-    const { callFrom } = this.state;
-    socket.emit('end', { to: callFrom });
+    const { callFrom, clientId } = this.state;
+    socket.emit('end', { to: clientId });
     this.setState({ callModal: '' });
   }
 
@@ -73,46 +84,51 @@ class ApplicationWrapper extends Component {
     this.config = null;
     this.setState({
       callWindow: '',
-      callModal: '',
       localSrc: null,
       peerSrc: null,
     });
   }
 
+  handleSnackMessage = (message) => {
+    this.setState({ snackMessage: message });
+  };
+
   render() {
     const {
       clientId,
       callFrom,
-      callModal,
       callWindow,
       localSrc,
       peerSrc,
+      snackMessage,
     } = this.state;
     return (
-      <div>
-        {!peerSrc && (
-          <MainWindow clientId={clientId} startCall={this.startCallHandler} />
-        )}
-        {!_.isEmpty(this.config) && (
-          <CallWindow
-            status={callWindow}
-            localSrc={localSrc}
-            peerSrc={peerSrc}
-            clientId={clientId}
-            callFrom={callFrom}
-            sendMessage={this.pc.messageHandler}
-            config={this.config}
-            mediaDevice={this.pc.mediaDevice}
-            endCall={this.endCallHandler}
-          />
-        )}
-        <CallModal
-          status={callModal}
-          startCall={this.startCallHandler}
-          rejectCall={this.rejectCallHandler}
-          callFrom={callFrom}
-        />
-      </div>
+      <>
+        <SnackBar snackMsg={snackMessage} />
+        <div className='rtcContainer'>
+          {!peerSrc && _.isEmpty(this.config) && (
+            <MainWindow
+              clientId={clientId}
+              startCall={this.startCallHandler}
+              handleSnackMessage={this.handleSnackMessage}
+            />
+          )}
+          {!_.isEmpty(this.config) && (
+            <CallWindow
+              status={callWindow}
+              localSrc={localSrc}
+              peerSrc={peerSrc}
+              clientId={clientId}
+              callFrom={callFrom}
+              sendMessage={this.pc.messageHandler}
+              config={this.config}
+              mediaDevice={this.pc.mediaDevice}
+              endCall={this.endCallHandler}
+              handleSnackMessage={this.handleSnackMessage}
+            />
+          )}
+        </div>
+      </>
     );
   }
 }

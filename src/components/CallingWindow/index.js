@@ -18,13 +18,12 @@ function CallingWindow({ startCall, clientId }) {
 
   return (
     <div className='container main-window'>
-      <div>
-        <h4> Join Room</h4>
-      </div>
+      <div className=' camIcon fa fa-video-camera'></div>
       <div>
         <input
           type='text'
-          className='txt-clientId'
+          required
+          className='txt-clientId is-invalid'
           spellCheck={false}
           placeholder='Enter a Room ID'
           onChange={(event) => setRoomID(event.target.value)}
@@ -39,9 +38,11 @@ function CallingWindow({ startCall, clientId }) {
         <div>
           <button
             type='button'
-            className='btn-action fa fa-video-camera'
+            className='btn-action'
             onClick={callWithVideo(true)}
-          ></button>
+          >
+            Join Room
+          </button>
         </div>
       </div>
     </div>

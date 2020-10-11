@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import ChatWindow from '../ChatWindow';
+
+import WaitingScreen from '../WaitingScreen';
+import ControlWindow from './ControlWindow';
 import './CallWindow.scss';
 const getButtonClass = (icon, enabled) =>
   classnames(`btn-action fa ${icon}`, { disable: !enabled });
@@ -14,6 +16,7 @@ function CallWindow({
   status,
   clientId,
   endCall,
+  handleSnackMessage,
 }) {
   const peerVideo = useRef(null);
   const localVideo = useRef(null);
@@ -49,29 +52,42 @@ function CallWindow({
 
   return (
     <div className={classnames('call-window', status)}>
-      <video id='peerVideo' ref={peerVideo} autoPlay />
-      <video id='localVideo' ref={localVideo} autoPlay muted />
-      <div></div>
-      <div className='video-control'>
-        <button
-          key='btnVideo'
-          type='button'
-          className={getButtonClass('fa-video-camera', video)}
-          onClick={() => toggleMediaDevice('video')}
-        />
-        <button
-          key='btnAudio'
-          type='button'
-          className={getButtonClass('fa-microphone', audio)}
-          onClick={() => toggleMediaDevice('audio')}
-        />
-        <button
-          type='button'
-          className='btn-action hangup fa fa-phone'
-          onClick={() => endCall(true)}
+      <div className='chatPeer'>
+        <div className='peerContainer'>
+          <div className='peerVideo'>
+            {<WaitingScreen />}
+            <video id='peerVideo' ref={peerVideo} autoPlay />
+          </div>
+          <div className='video-control'>
+            <button
+              key='btnVideo'
+              type='button'
+              className={getButtonClass('fa-video-camera', video)}
+              onClick={() => toggleMediaDevice('video')}
+            />
+            <button
+              key='btnAudio'
+              type='button'
+              className={getButtonClass('fa-microphone', audio)}
+              onClick={() => toggleMediaDevice('audio')}
+            />
+            <button
+              type='button'
+              className='btn-action hangup fa fa-phone'
+              onClick={() => endCall(true)}
+            />
+          </div>
+        </div>
+
+        <ControlWindow
+          clientId={clientId}
+          handleSnackMessage={handleSnackMessage}
         />
       </div>
-      <ChatWindow clientId={clientId} />
+
+      <div className='userVideo'>
+        <video id='localVideo' ref={localVideo} autoPlay muted />
+      </div>
     </div>
   );
 }

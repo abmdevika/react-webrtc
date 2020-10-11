@@ -1,0 +1,114 @@
+#snackbar {
+  visibility: hidden;
+  min-width: 15.625rem;
+  height: 3.125rem;
+  margin-left: -7.8125rem;
+  background: rgba(210, 255, 82, 0.74);
+  background: -moz-linear-gradient(
+    45deg,
+    rgba(210, 255, 82, 0.74) 0%,
+    rgba(183, 246, 75, 0.74) 16%,
+    rgba(145, 232, 66, 0.84) 39%,
+    rgba(145, 232, 66, 1) 76%
+  );
+  background: -webkit-gradient(
+    left bottom,
+    right top,
+    color-stop(0%, rgba(210, 255, 82, 0.74)),
+    color-stop(16%, rgba(183, 246, 75, 0.74)),
+    color-stop(39%, rgba(145, 232, 66, 0.84)),
+    color-stop(76%, rgba(145, 232, 66, 1))
+  );
+  background: -webkit-linear-gradient(
+    45deg,
+    rgba(210, 255, 82, 0.74) 0%,
+    rgba(183, 246, 75, 0.74) 16%,
+    rgba(145, 232, 66, 0.84) 39%,
+    rgba(145, 232, 66, 1) 76%
+  );
+  background: -o-linear-gradient(
+    45deg,
+    rgba(210, 255, 82, 0.74) 0%,
+    rgba(183, 246, 75, 0.74) 16%,
+    rgba(145, 232, 66, 0.84) 39%,
+    rgba(145, 232, 66, 1) 76%
+  );
+  background: -ms-linear-gradient(
+    45deg,
+    rgba(210, 255, 82, 0.74) 0%,
+    rgba(183, 246, 75, 0.74) 16%,
+    rgba(145, 232, 66, 0.84) 39%,
+    rgba(145, 232, 66, 1) 76%
+  );
+  background: linear-gradient(
+    45deg,
+    rgba(210, 255, 82, 0.74) 0%,
+    rgba(183, 246, 75, 0.74) 16%,
+    rgba(145, 232, 66, 0.84) 39%,
+    rgba(145, 232, 66, 1) 76%
+  );
+
+  color: #fff;
+  text-align: center;
+  border-radius: 0.25rem;
+  padding: 1rem;
+  position: fixed;
+  z-index: 1;
+  right: 1.875rem;
+  top: 1.875rem;
+}
+
+/* Show the snackbar when clicking on a button (class added with JavaScript) */
+.show {
+  visibility: visible !important; /* Show the snackbar */
+
+  /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+However, delay the fade out process for 2.5 seconds */
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+  from {
+    right: 0;
+    opacity: 0;
+  }
+  to {
+    right: 1.875rem;
+    opacity: 1;
+  }
+}
+
+@keyframes fadein {
+  from {
+    right: 0;
+    opacity: 0;
+  }
+  to {
+    right: 1.875rem;
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeout {
+  from {
+    right: 1.875rem;
+    opacity: 1;
+  }
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    right: 1.875rem;
+    opacity: 1;
+  }
+  to {
+    right: 0;
+    opacity: 0;
+  }
+}

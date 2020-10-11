@@ -12,31 +12,36 @@ function initSocket(socket) {
 
     // when the client emits 'adduser', this listens and executes
     .on('adduser', function (data) {
-      console.log('user add', data.from, data.to);
       const { from, to } = data;
-      // store the username in the socket session for this client
-      socket.username = from;
-      // store the room name in the socket session for this client
-      socket.room = to;
-      // add the client's username to the global list
-      userNames[from] = from;
-      // send client to room 1
-      socket.join(to);
+      const handleAddUser = () => {
+        // store the username in the socket session for this client
+        socket.username = from;
+        // store the room name in the socket session for this client
+        socket.room = to;
+        // add the client's username to the global list
+        userNames[from] = from;
+        // send client to room 1
+        socket.join(to);
 
-      socket.to(to).broadcast.emit('signal', {
-        ...data,
-      });
-      // socket.emit('video', { ...data, from });
-      // echo to client they've connected
-      socket.emit('updatechat', 'SERVER', 'you have connected to room=>' + to);
-      // echo to room 1 that a person has connected to their room
-      socket.broadcast
-        .to(to)
-        .emit('updatechat', 'SERVER', from + ' has connected to this room');
-      socket.emit('updaterooms', rooms, to);
+        socket.to(to).broadcast.emit('signal', {
+          ...data,
+        });
+
+        socket.to(to).broadcast.emit('newUser', { name: from });
+        // echo to room 1 that a person has connected to their room
+      };
+
+      if (!rooms[to]) {
+        rooms[to] = [from];
+        handleAddUser(data);
+      } else if (rooms[to].length === 1) {
+        rooms[to] = [...rooms[to], from];
+        handleAddUser(data);
+      } else {
+        socket.emit('room');
+      }
     })
     .on('sendchat', function (data) {
-      console.log(data, socket.room, socket.username);
       // we tell the client to execute 'updatechat' with 2 parameters
       socket.broadcast
         .to(socket.room)
@@ -46,15 +51,15 @@ function initSocket(socket) {
     .on('end', (data) => {
       const receiver = data.to;
       if (receiver) {
-        socket.to(receiver).emit('end');
+        socket.to(receiver).emit('userLeft', { name: socket.username });
       }
     })
 
     .on('signal', (data) => {
-      console.log(
-        'sending signal from ' + socket.username + ' to ',
-        socket.room
-      );
+      // console.log(
+      //   'sending signal from ' + socket.username + ' to ',
+      //   socket.room
+      // );
 
       socket.to(socket.room).broadcast.emit('signal', {
         from: socket.username,

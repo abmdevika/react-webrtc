@@ -13,7 +13,7 @@ class PeerConnection extends Emitter {
     super();
     this.pc = new RTCPeerConnection(PC_CONFIG);
 
-    this.to = friendID;
+    this.to = friendID; //roomID
 
     // once remote stream arrives, show it in the remote video element
 

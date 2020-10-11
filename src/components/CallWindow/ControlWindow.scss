@@ -1,0 +1,108 @@
+@import '../../scss/app.scss';
+.controller {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+  width: 36%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #a942420a;
+  color: $black;
+  .tab {
+    display: flex;
+    flex-shrink: 0;
+    background-color: black;
+    justify-content: space-between;
+    .tabItem {
+      > button {
+        padding: 0.625rem;
+        border: unset;
+        background-color: unset;
+        border-radius: unset;
+        &:focus,
+        &.active:focus {
+          outline: unset;
+          outline-offset: unset;
+        }
+        &:hover,
+        &.active {
+          background: rgba(241, 70, 198, 0.94);
+          background: -moz-linear-gradient(
+            -45deg,
+            rgba(241, 70, 198, 0.94) 0%,
+            rgba(195, 23, 143, 0.94) 27%,
+            rgba(173, 0, 116, 0.95) 40%,
+            rgba(237, 38, 178, 1) 84%,
+            rgba(255, 31, 173, 1) 96%
+          );
+          background: -webkit-gradient(
+            left top,
+            right bottom,
+            color-stop(0%, rgba(241, 70, 198, 0.94)),
+            color-stop(27%, rgba(195, 23, 143, 0.94)),
+            color-stop(40%, rgba(173, 0, 116, 0.95)),
+            color-stop(84%, rgba(237, 38, 178, 1)),
+            color-stop(96%, rgba(255, 31, 173, 1))
+          );
+          background: -webkit-linear-gradient(
+            -45deg,
+            rgba(241, 70, 198, 0.94) 0%,
+            rgba(195, 23, 143, 0.94) 27%,
+            rgba(173, 0, 116, 0.95) 40%,
+            rgba(237, 38, 178, 1) 84%,
+            rgba(255, 31, 173, 1) 96%
+          );
+          background: -o-linear-gradient(
+            -45deg,
+            rgba(241, 70, 198, 0.94) 0%,
+            rgba(195, 23, 143, 0.94) 27%,
+            rgba(173, 0, 116, 0.95) 40%,
+            rgba(237, 38, 178, 1) 84%,
+            rgba(255, 31, 173, 1) 96%
+          );
+          background: -ms-linear-gradient(
+            -45deg,
+            rgba(241, 70, 198, 0.94) 0%,
+            rgba(195, 23, 143, 0.94) 27%,
+            rgba(173, 0, 116, 0.95) 40%,
+            rgba(237, 38, 178, 1) 84%,
+            rgba(255, 31, 173, 1) 96%
+          );
+          background: linear-gradient(
+            135deg,
+            rgba(241, 70, 198, 0.94) 0%,
+            rgba(195, 23, 143, 0.94) 27%,
+            rgba(173, 0, 116, 0.95) 40%,
+            rgba(237, 38, 178, 1) 84%,
+            rgba(255, 31, 173, 1) 96%
+          );
+        }
+      }
+    }
+
+    i {
+      font-size: 1.5625rem;
+      margin-right: 0.625rem;
+    }
+    .userName {
+      margin-top: 0px;
+      padding-right: 10px;
+      font-size: 1.5625rem;
+      display: flex;
+      align-items: center;
+      i {
+        background: -moz-linear-gradient(top, #e72c83 0%, #a742c6 100%);
+        background: -webkit-linear-gradient(top, #e72c83 0%, #a742c6 100%);
+        background: linear-gradient(to bottom, #e72c83 0%, #a742c6 100%);
+        -webkit-background-clip: text;
+        -moz-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+    span {
+      color: $main-color;
+      -webkit-text-fill-color: unset;
+    }
+  }
+}
